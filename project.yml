@@ -1,0 +1,38 @@
+name: VoiceReader
+options:
+  bundleIdPrefix: com.voicereader
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "16.2"
+
+packages:
+  ZIPFoundation:
+    url: https://github.com/weichsel/ZIPFoundation.git
+    from: 0.9.0
+
+targets:
+  VoiceReader:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: VoiceReader
+    dependencies:
+      - package: ZIPFoundation
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.anweshanadhikari.voicereader
+        SWIFT_VERSION: "5.9"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: >
+          UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: >
+          UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        INFOPLIST_KEY_NSDocumentsFolderUsageDescription: >
+          VoiceReader needs access to your files to open EPUB books.
+        INFOPLIST_KEY_NSPersonalVoiceUsageDescription: >
+          VoiceReader can read books in your own Personal Voice.
+        ENABLE_PREVIEWS: YES
