@@ -78,7 +78,7 @@ struct ReadingSettingsView: View {
                                 .padding(.vertical, 8)
                                 .background(settings.lineHeight == value ? Color.accentColor.opacity(0.15) : Color.clear,
                                             in: RoundedRectangle(cornerRadius: 8))
-                                .foregroundStyle(settings.lineHeight == value ? .blue : .primary)
+                                .foregroundStyle(settings.lineHeight == value ? Color.accentColor : .primary)
                             }
                             .buttonStyle(.plain)
                         }
@@ -106,7 +106,7 @@ struct ReadingSettingsView: View {
                                 .padding(.vertical, 8)
                                 .background(settings.marginSize == value ? Color.accentColor.opacity(0.15) : Color.clear,
                                             in: RoundedRectangle(cornerRadius: 8))
-                                .foregroundStyle(settings.marginSize == value ? .blue : .primary)
+                                .foregroundStyle(settings.marginSize == value ? Color.accentColor : .primary)
                             }
                             .buttonStyle(.plain)
                         }
@@ -139,7 +139,7 @@ private struct ThemeButton: View {
                         .frame(width: 60, height: 40)
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .strokeBorder(isSelected ? Color.blue : Color(.separator), lineWidth: isSelected ? 2 : 1)
+                                .strokeBorder(isSelected ? Color.accentColor : Color(.separator), lineWidth: isSelected ? 2 : 1)
                         )
                     Text("Aa")
                         .font(.system(size: 15, weight: .medium))
@@ -147,7 +147,7 @@ private struct ThemeButton: View {
                 }
                 Text(theme.label)
                     .font(.caption2)
-                    .foregroundStyle(isSelected ? .blue : .secondary)
+                    .foregroundStyle(isSelected ? Color.accentColor : .secondary)
             }
         }
         .buttonStyle(.plain)

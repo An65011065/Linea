@@ -102,7 +102,7 @@ struct LibraryView: View {
                     .font(.headline)
                     .padding(.horizontal, 28)
                     .padding(.vertical, 13)
-                    .background(.blue)
+                    .background(Color.accentColor)
                     .foregroundStyle(.white)
                     .clipShape(Capsule())
             }

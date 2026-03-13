@@ -23,6 +23,7 @@
 		E36B33885D640AE189331D23 /* BookReaderContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644BD7B195D7343DCC03944C /* BookReaderContainerView.swift */; };
 		EF7D0852C19139D96EC19784 /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4526B3FD9046D3EF5C415486 /* SpeechService.swift */; };
 		FD4A3B44B81A1C435E7C144A /* ReadingSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50650DEAF604657010CF94D /* ReadingSettingsView.swift */; };
+		AA000001000000000000AAA2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000001000000000000AAA1 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		9A8CEB38AABD5CBBCEF4A63B /* EPUBBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPUBBook.swift; sourceTree = "<group>"; };
 		A50650DEAF604657010CF94D /* ReadingSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSettingsView.swift; sourceTree = "<group>"; };
 		C09F8384E1C9592094182CCF /* ZenModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZenModeView.swift; sourceTree = "<group>"; };
+		AA000001000000000000AAA1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,6 +219,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = QY2W4DZ58S;
 				ENABLE_PREVIEWS = YES;
@@ -306,6 +309,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = QY2W4DZ58S;
 				ENABLE_PREVIEWS = YES;

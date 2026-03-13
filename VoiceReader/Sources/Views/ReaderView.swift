@@ -177,7 +177,7 @@ struct WebReaderView: UIViewRepresentable {
             --font-family: \(settings.font.cssFamily);
             --line-height: \(settings.lineHeight);
             --margin: \(Int(margin))px;
-            --highlight: #1E73FF;
+            --highlight: #E8400C;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html {

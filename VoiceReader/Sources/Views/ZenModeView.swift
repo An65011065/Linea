@@ -127,7 +127,7 @@ private struct WordTokenView: View {
     var body: some View {
         Text(word)
             .font(.system(size: fontSize, weight: isActive ? .bold : .light, design: .rounded))
-            .foregroundStyle(isActive ? Color(red: 0.2, green: 0.5, blue: 1.0) : Color.white)
+            .foregroundStyle(isActive ? Color(red: 0.910, green: 0.251, blue: 0.047) : Color.white)
             .lineLimit(1)
             .fixedSize()
             .scaleEffect(scale)
