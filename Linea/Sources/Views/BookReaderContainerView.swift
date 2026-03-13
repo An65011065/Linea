@@ -16,6 +16,7 @@ struct BookReaderContainerView: View {
     @State private var chromeVisible = true
     @State private var hideTask: Task<Void, Never>?
     @State private var lastWordOffset: Int = 0
+    @State private var scrollProgress: Double = 0
 
     var currentChapter: EPUBBook.Chapter { book.chapters[selectedChapterIndex] }
     var isIPad: Bool { hSizeClass == .regular }
@@ -29,20 +30,12 @@ struct BookReaderContainerView: View {
                     .fill(Color.primary.opacity(0.08))
                 Rectangle()
                     .fill(Color.accentColor.opacity(0.7))
-                    .frame(width: geo.size.width * chapterProgress)
-                    .animation(.linear(duration: 0.2), value: chapterProgress)
+                    .frame(width: geo.size.width * scrollProgress)
+                    .animation(.linear(duration: 0.1), value: scrollProgress)
             }
         }
         .frame(height: 2)
         .ignoresSafeArea(edges: .horizontal)
-    }
-
-    /// 0–1 progress within the current chapter based on speech position
-    var chapterProgress: Double {
-        let total = currentChapter.wordCount
-        guard total > 0 else { return 0 }
-        let wordsDone = currentChapter.wordCount(upToCharOffset: lastWordOffset)
-        return min(1.0, Double(wordsDone) / Double(total))
     }
 
     var body: some View {
@@ -66,7 +59,11 @@ struct BookReaderContainerView: View {
         .onDisappear {
             hideTask?.cancel()
             speech.stop()
+            UIApplication.shared.isIdleTimerDisabled = false
             saveProgress()
+        }
+        .onChange(of: speech.isPlaying) { playing in
+            UIApplication.shared.isIdleTimerDisabled = playing
         }
         .onChange(of: selectedChapterIndex) { _ in saveProgress() }
         .onChange(of: speech.currentWordRange.map {
@@ -203,13 +200,34 @@ struct BookReaderContainerView: View {
 
     @ViewBuilder
     private func readerContent(withTapHandler: Bool = false) -> some View {
-        if zenMode {
-            ZenModeView(chapter: currentChapter, speech: speech, windowSize: $zenWindowSize,
-                        onTap: withTapHandler ? toggleChrome : nil)
-        } else {
-            ReaderView(chapter: currentChapter, speech: speech,
-                       onTap: withTapHandler ? toggleChrome : nil,
-                       onWordClick: handleWordClick)
+        ZStack {
+            // ZenModeView always stays in the tree so its gesture survives the mode switch
+            ZenModeView(
+                chapter: currentChapter,
+                speech: speech,
+                windowSize: $zenWindowSize,
+                onTap: withTapHandler ? toggleChrome : nil,
+                onLongPressStart: {
+                    speech.pause()
+                    withAnimation(.easeInOut(duration: 0.3)) { zenMode = false }
+                },
+                onLongPressEnd: {
+                    withAnimation(.easeInOut(duration: 0.3)) { zenMode = true }
+                    speech.resume()
+                }
+            )
+
+            // ReaderView slides in on top, fades out when zen mode is active
+            ReaderView(
+                chapter: currentChapter,
+                speech: speech,
+                onTap: withTapHandler ? toggleChrome : nil,
+                onWordClick: handleWordClick,
+                scrollProgress: $scrollProgress
+            )
+            .opacity(zenMode ? 0 : 1)
+            .animation(.easeInOut(duration: 0.3), value: zenMode)
+            .allowsHitTesting(!zenMode)
         }
     }
 

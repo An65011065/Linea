@@ -9,9 +9,10 @@ struct ReaderView: View {
     @EnvironmentObject var settings: ReadingSettings
     var onTap: (() -> Void)?
     var onWordClick: ((Int) -> Void)?
+    @Binding var scrollProgress: Double
 
     var body: some View {
-        WebReaderView(chapter: chapter, speech: speech, settings: settings, onTap: onTap, onWordClick: onWordClick)
+        WebReaderView(chapter: chapter, speech: speech, settings: settings, onTap: onTap, onWordClick: onWordClick, scrollProgress: $scrollProgress)
             .background(settings.theme.background)
             .ignoresSafeArea(edges: .horizontal)
     }
@@ -25,6 +26,7 @@ struct WebReaderView: UIViewRepresentable {
     @ObservedObject var settings: ReadingSettings
     var onTap: (() -> Void)?
     var onWordClick: ((Int) -> Void)?
+    @Binding var scrollProgress: Double
 
     func makeUIView(context: Context) -> WKWebView {
         let config = WKWebViewConfiguration()
@@ -37,6 +39,7 @@ struct WebReaderView: UIViewRepresentable {
         webView.isOpaque = false
         webView.backgroundColor = .clear
         webView.scrollView.backgroundColor = .clear
+        webView.scrollView.delegate = context.coordinator
         webView.navigationDelegate = context.coordinator
         loadContent(in: webView, coordinator: context.coordinator)
         return webView
@@ -63,24 +66,37 @@ struct WebReaderView: UIViewRepresentable {
         }
     }
 
-    func makeCoordinator() -> Coordinator { Coordinator(onTap: onTap, onWordClick: onWordClick) }
+    func makeCoordinator() -> Coordinator {
+        Coordinator(onTap: onTap, onWordClick: onWordClick, onScrollProgress: { progress in
+            scrollProgress = progress
+        })
+    }
 
-    class Coordinator: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
+    class Coordinator: NSObject, WKScriptMessageHandler, WKNavigationDelegate, UIScrollViewDelegate {
         var loadedChapterID: UUID?
         var lastHighlightStart: Int = -1
         var loadedTwoPageMode: Bool = false
         var onTap: (() -> Void)?
         var onWordClick: ((Int) -> Void)?
+        var onScrollProgress: ((Double) -> Void)?
         // Pending initial highlight to apply after page load
         var pendingInitialWord: String?
         var pendingInitialHint: Int = 0
         // Track last applied settings to avoid redundant JS calls
         var lastSettingsKey: String = ""
 
-        init(onTap: (() -> Void)? = nil, onWordClick: ((Int) -> Void)? = nil) {
+        init(onTap: (() -> Void)? = nil, onWordClick: ((Int) -> Void)? = nil, onScrollProgress: ((Double) -> Void)? = nil) {
             self.onTap = onTap
             self.onWordClick = onWordClick
+            self.onScrollProgress = onScrollProgress
             super.init()
+        }
+
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            let maxOffset = scrollView.contentSize.height - scrollView.bounds.height
+            guard maxOffset > 0 else { return }
+            let progress = max(0, min(1, scrollView.contentOffset.y / maxOffset))
+            DispatchQueue.main.async { [weak self] in self?.onScrollProgress?(progress) }
         }
 
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
